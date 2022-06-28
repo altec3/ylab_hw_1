@@ -1,24 +1,11 @@
 from itertools import combinations, combinations_with_replacement
+import re
 from math import prod
 
 
 def domain_name(url: str) -> str:
-    http = "http://"
-    https = "https://"
-    www = "www."
-    temp: str = ""
-    if http in url:
-        temp += url.replace(http, "")
-    elif https in url:
-        temp += url.replace(https, "")
-    if www in temp:
-        temp = temp.replace(www, "")
-        result = temp.split(".")
-        return result[0]
-    if www in url:
-        temp += url.replace(www, "")
-    result = temp.split(".")
-    return result[0]
+    prefix = r'(https?://)?(www.)?([A-Za-z_0-9-]+).*'
+    return re.search(prefix, url).group(3)
 
 
 def int32_to_ip(int32: int) -> str:
@@ -44,18 +31,17 @@ def int32_to_ip(int32: int) -> str:
 
 
 def zeros(num: int) -> int:
-    i = 1
-    result: float = 0
-    while num >= i:
-        i *= 5
-        result += num / i
-    return int(result)
+    result: int = 0
+    while num > 0:
+        num //= 5
+        result += num
+    return result
 
 
 def bananas(s: str) -> set:
     result = set()
     target = "banana"
-    if target > s:
+    if len(target) > len(s):
         return result
     for i in combinations(range(0, len(s)), len(s) - len(target)):
         lst = list(s)
@@ -87,3 +73,7 @@ def count_find_num(primes_l: list, limit: int = 500) -> list:
     if result_comb:
         return [len(result_comb), max(result_mult)]
     return []
+
+
+if __name__ == "__main__":
+    print(bananas(" banana"))
